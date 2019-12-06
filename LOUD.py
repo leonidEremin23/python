@@ -218,9 +218,9 @@ class Register(QWidget):
         self.label_2 = QtWidgets.QLabel(Form)
         self.label_2.setGeometry(QtCore.QRect(10, 60, 55, 16))
         self.label_2.setObjectName("label_2")
-        self.lineEdit = QtWidgets.QLineEdit(Form)
-        self.lineEdit.setGeometry(QtCore.QRect(10, 30, 191, 21))
-        self.lineEdit.setObjectName("lineEdit")
+        self.combo = QtWidgets.QComboBox(Form)
+        self.combo.setGeometry(QtCore.QRect(10, 30, 191, 21))
+        self.make_combo()
         self.pushButton_3 = QtWidgets.QPushButton(Form)
         self.pushButton_3.setGeometry(QtCore.QRect(10, 110, 131, 28))
         self.pushButton_3.setObjectName("pushButton_3")
@@ -228,7 +228,7 @@ class Register(QWidget):
         self.label.setGeometry(QtCore.QRect(10, 10, 55, 16))
         self.label.setObjectName("label")
         self.INFORM = QtWidgets.QLabel(Form)
-        self.INFORM.setGeometry(QtCore.QRect(220, 30, 135, 30))
+        self.INFORM.setGeometry(QtCore.QRect(220, 30, 160, 80))
         self.INFORM.setObjectName("INFORM")
 
         _translate = QtCore.QCoreApplication.translate
@@ -242,8 +242,13 @@ class Register(QWidget):
         self.pushButton_3.clicked.connect(self.le_try)
         self.pushButton.clicked.connect(self.teach)
         self.pushButton_2.clicked.connect(self.pupl)
-        self.INFORM.setText('STATUS')
+        self.INFORM.setText('ПРОЙДИТЕ АВТОРИЗАЦИЮ')
 
+    def make_combo(self):
+        query = f"SELECT * FROM math"
+        res = cur.execute(query).fetchall()
+        for i in res:
+            print(i)
     def teach(self):
         if self.is_auth and self.typeq == 'teacher':
             self.th = Teacher(self.name, self.spec)
