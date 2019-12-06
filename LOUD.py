@@ -245,10 +245,10 @@ class Register(QWidget):
         self.INFORM.setText('ПРОЙДИТЕ АВТОРИЗАЦИЮ')
 
     def make_combo(self):
-        query = f"SELECT * FROM math"
+        query = f"SELECT name FROM users"
         res = cur.execute(query).fetchall()
         for i in res:
-            print(i)
+            self.combo.addItem(i[0])
     def teach(self):
         if self.is_auth and self.typeq == 'teacher':
             self.th = Teacher(self.name, self.spec)
@@ -262,13 +262,9 @@ class Register(QWidget):
     def le_try(self):
         query = f"SELECT DISTINCT name FROM users"
         res = cur.execute(query).fetchall()
-        flag = False
-        for i in res:
-            if self.lineEdit.text() in i:
-                flag = True
-                break
+        flag = True
         if flag:
-            query = f"SELECT password, type FROM users WHERE name = '{self.lineEdit.text()}'"
+            query = f"SELECT password, type FROM users WHERE name = '{self.combo.currentText()}'"
             res = cur.execute(query).fetchall()
             truepswr = res[0][0]
             typeq = res[0][1]
