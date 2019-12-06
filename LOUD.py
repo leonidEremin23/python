@@ -271,13 +271,13 @@ class Register(QWidget):
             actualpswrd = self.lineEdit_2.text()
             if truepswr == actualpswrd:
                 self.is_auth = True
-                self.name = self.lineEdit.text()
+                self.name = self.combo.currentText()
                 self.INFORM.setText('УСПЕШНО')
-                query = f"SELECT type FROM users WHERE name = '{self.lineEdit.text()}'"
+                query = f"SELECT type FROM users WHERE name = '{self.combo.currentText()}'"
                 res = cur.execute(query).fetchall()
                 self.typeq = res[0][0]
                 if typeq == 'teacher':
-                    query = f"SELECT spec FROM teachers WHERE name = '{self.lineEdit.text()}'"
+                    query = f"SELECT spec FROM teachers WHERE name = '{self.combo.currentText()}'"
                     res = cur.execute(query).fetchall()
                     self.spec = res[0][0]
                     print(self.spec)
