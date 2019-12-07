@@ -17,6 +17,7 @@ class Teacher(QWidget):
         self.table_name = spec
         self.name = name
         self.is_auth = True
+        self.rowsid = None
         self.initUI()
 
 
@@ -42,6 +43,10 @@ class Teacher(QWidget):
         self.jl.setGeometry(QtCore.QRect(280, 70, 151, 41))
         self.jl.setText('Просмотреть оценки')
         self.jl.clicked.connect(self.jol)
+        self.dl = QtWidgets.QPushButton(self)
+        self.dl.setGeometry(QtCore.QRect(80, 70, 151, 41))
+        self.dl.setText('Удалить запись')
+        self.dl.clicked.connect(self.deliting)
         self.warning_field = QtWidgets.QLineEdit(self)
         self.warning_field.setGeometry(QtCore.QRect(540, 80, 211, 22))
         self.warning_field.setObjectName("warning_field")
@@ -50,6 +55,7 @@ class Teacher(QWidget):
         self.gogo.clicked.connect(self.query_mk)
         self.comboBox.clear()
         self.start_fings()
+        self.tableWidget.cellClicked.connect(self.contextMenuEvent)
 
     def make_table(self):
         self.tableWidget.setColumnCount(5)
@@ -68,6 +74,7 @@ class Teacher(QWidget):
 
     def query_mk(self):
         if self.is_auth:
+
             puple = self.comboBox.currentText()
             mark = self.mark_field.text()
             warning = self.warning_field.text()
@@ -103,6 +110,25 @@ class Teacher(QWidget):
             self.lineEdit.setText('ПРОЙДИТЕ')
             self.lineEdit_2.setText('АВТОРИЗАЦИЮ')
 
+    def contextMenuEvent(self):
+        row = self.tableWidget.currentRow()
+        self.rowsid = self.tableWidget.item(row, 0).text()
+
+    def deliting(self):
+        write = self.rowsid
+        if write != None:
+            write = int(write)
+            print(write)
+            query = f"DELETE FROM {self.table_name} WHERE id = {write}"
+            cur.execute(query)
+            con.commit()
+        query = f"SELECT * FROM {self.table_name}"
+        res = cur.execute(query).fetchall()
+        self.tableWidget.setRowCount(len(res))
+        for row in range(len(res)):
+            element = res[row]
+            for col in range(len(element)):
+                self.tableWidget.setItem(row, col, QTableWidgetItem(str(element[col])))
 
 class Puple(QWidget):
     def __init__(self, name):
@@ -253,13 +279,19 @@ class Register(QWidget):
         if self.is_auth and self.typeq == 'teacher':
             self.th = Teacher(self.name, self.spec)
             self.th.show()
-        elif self.typeq == 'puple':
+        elif self.typeq == 'puple' and self.is_auth:
             self.INFORM.setText('НЕ ДОПУСТИМО ОТКРЫТИЕ')
+        else:
+            self.INFORM.setText('СНАЧАЛА АВТОРИЗУЙТЕСЬ')
 
     def pupl(self):
         if self.is_auth and self.typeq == 'puple':
             self.pl = Puple(self.name)
             self.pl.show()
+        elif self.typeq == 'teacher' and self.is_auth:
+            self.INFORM.setText('НЕ ДОПУСТИМО ОТКРЫТИЕ')
+        else:
+            self.INFORM.setText('СНАЧАЛА АВТОРИЗУЙТЕСЬ')
 
     def le_try(self):
         query = f"SELECT DISTINCT name FROM users"
