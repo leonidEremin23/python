@@ -43,6 +43,10 @@ class Teacher(QWidget):
         self.jl.setGeometry(QtCore.QRect(280, 70, 151, 41))
         self.jl.setText('Просмотреть оценки')
         self.jl.clicked.connect(self.jol)
+        self.pl = QtWidgets.QPushButton(self)
+        self.pl.setGeometry(QtCore.QRect(450, 70, 70, 41))
+        self.pl.setText('По ученику')
+        self.pl.clicked.connect(self.pls)
         self.dl = QtWidgets.QPushButton(self)
         self.dl.setGeometry(QtCore.QRect(80, 70, 151, 41))
         self.dl.setText('Удалить запись')
@@ -64,7 +68,7 @@ class Teacher(QWidget):
 
     def start_fings(self):
 
-        query = f"SELECT DISTINCT name FROM {self.table_name}"
+        query = f"SELECT name FROM users WHERE type = 'puple'"
         res = cur.execute(query).fetchall()
         for i in res:
             self.comboBox.addItem(i[0])
@@ -113,6 +117,8 @@ class Teacher(QWidget):
     def contextMenuEvent(self):
         row = self.tableWidget.currentRow()
         self.rowsid = self.tableWidget.item(row, 0).text()
+        self.name_of = self.tableWidget.item(row, 1).text()
+
 
     def deliting(self):
         write = self.rowsid
@@ -129,7 +135,14 @@ class Teacher(QWidget):
             element = res[row]
             for col in range(len(element)):
                 self.tableWidget.setItem(row, col, QTableWidgetItem(str(element[col])))
-
+    def pls(self):
+        query = f"SELECT * FROM {self.table_name} WHERE name = '{self.name_of}'"
+        res = cur.execute(query).fetchall()
+        self.tableWidget.setRowCount(len(res))
+        for row in range(len(res)):
+            element = res[row]
+            for col in range(len(element)):
+                self.tableWidget.setItem(row, col, QTableWidgetItem(str(element[col])))
 class Puple(QWidget):
     def __init__(self, name):
         super().__init__()
