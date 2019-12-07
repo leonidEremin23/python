@@ -228,7 +228,7 @@ class Register(QWidget):
         self.label.setGeometry(QtCore.QRect(10, 10, 55, 16))
         self.label.setObjectName("label")
         self.INFORM = QtWidgets.QLabel(Form)
-        self.INFORM.setGeometry(QtCore.QRect(220, 30, 160, 80))
+        self.INFORM.setGeometry(QtCore.QRect(220, 30, 200, 100))
         self.INFORM.setObjectName("INFORM")
 
         _translate = QtCore.QCoreApplication.translate
@@ -253,6 +253,8 @@ class Register(QWidget):
         if self.is_auth and self.typeq == 'teacher':
             self.th = Teacher(self.name, self.spec)
             self.th.show()
+        elif self.typeq == 'puple':
+            self.INFORM.setText('НЕ ДОПУСТИМО ОТКРЫТИЕ')
 
     def pupl(self):
         if self.is_auth and self.typeq == 'puple':
